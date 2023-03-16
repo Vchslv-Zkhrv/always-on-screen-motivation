@@ -88,10 +88,6 @@ class SpacerWidget(QtWidgets.QFrame):
 
 
 
-
-
-
-
 class VFrame(QtWidgets.QFrame):
 
     """
@@ -136,14 +132,62 @@ class GFrame(QtWidgets.QFrame):
 
 class WrapperCenter(GFrame):
 
-    """places child widget to the center"""
+    """places wrapped widget to the center"""
 
     def __init__(self, widget:QtWidgets.QWidget):
-        GFrame.__init__(self)
         self.widget = widget
+        GFrame.__init__(self)
         self.layout_.addItem(VSpacer(), 1,0,1,1)
         self.layout_.addItem(VSpacer(), 1,2,1,1)
         self.layout_.addItem(HSpacer(), 0,1,1,1)
         self.layout_.addItem(HSpacer(), 0,2,1,1)
         self.layout_.addWidget(widget, 1,1,1,1)
 
+
+class WrapperTop(VFrame):
+
+    """places wrapped widget to the top"""
+
+    def __init__(self, widget:QtWidgets.QWidget):
+        self.widget = widget
+        VFrame.__init__(self)
+        self.layout_.addWidget(widget)
+        self.layout_.addItem(VSpacer())
+
+
+        
+class WrapperBottom(VFrame):
+
+    """places wrapped widget to the bottom"""
+
+    def __init__(self, widget:QtWidgets.QWidget):
+        self.widget = widget
+        VFrame.__init__(self)
+        self.layout_.addItem(VSpacer())
+        self.layout_.addWidget(widget)
+
+
+        
+class WrapperLeft(HFrame):
+
+    """places wrapped widget to the Left"""
+
+    def __init__(self, widget:QtWidgets.QWidget):
+        self.widget = widget
+        HFrame.__init__(self)
+        self.layout_.addWidget(widget)
+        self.layout_.addItem(HSpacer())
+
+
+        
+class WrapperRight(HFrame):
+
+    """places wrapped widget to the right"""
+
+    def __init__(self, widget:QtWidgets.QWidget):
+        self.widget = widget
+        HFrame.__init__(self)
+        self.layout_.addItem(HSpacer())
+        self.layout_.addWidget(widget)
+
+        
