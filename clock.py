@@ -39,9 +39,11 @@ class CuckooClock():
 
     def loop(self, exit_condition:callable):
         while exit_condition():
+            logger.info("loop iteration")
             time.sleep(self.delay)
             self.do()
-
+        logger.debug("loop ended") 
+            
     def run_by_condition(self, condition):
         """
         Calls condition() without arguments at every iteration.

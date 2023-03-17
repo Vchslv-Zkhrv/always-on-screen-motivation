@@ -12,32 +12,34 @@ class HLayout(QtWidgets.QHBoxLayout):
     
     """QHBoxLayout with spacing and margins set to 0"""
     
-    def __init__(self, parent):
+    def __init__(self, parent, spacing=0, padding=0):
         QtWidgets.QHBoxLayout.__init__(self, parent)
-        self.setContentsMargins(0,0,0,0)
-        self.setSpacing(0)
+        self.setContentsMargins(padding, padding, padding, padding)
+        self.setSpacing(spacing)
 
 
 
 class VLayout(QtWidgets.QVBoxLayout):
     
-    """QVBoxLayout with spacing and marginsc set to 0"""
+    """QVBoxLayout with spacing and margins set to 0"""
     
-    def __init__(self, parent):
-        QtWidgets.QHBoxLayout.__init__(self, parent)
-        self.setContentsMargins(0,0,0,0)
-        self.setSpacing(0)
+    def __init__(self, parent, spacing=0, padding=0):
+        QtWidgets.QVBoxLayout.__init__(self, parent)
+        self.setContentsMargins(padding, padding, padding, padding)
+        self.setSpacing(spacing)
 
 
 
 class GLayout(QtWidgets.QGridLayout):
-
+    
     """QGridLayout with spacing and margins set to 0"""
-
-    def __init__(self, parent):
+    
+    def __init__(self, parent, spacing=0, padding=0):
         QtWidgets.QGridLayout.__init__(self, parent)
-        self.setContentsMargins(0,0,0,0)
-        self.setSpacing(0)
+        self.setContentsMargins(padding, padding, padding, padding)
+        self.setSpacing(spacing)
+
+
 
 
 
