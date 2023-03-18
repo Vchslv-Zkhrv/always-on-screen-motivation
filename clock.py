@@ -18,8 +18,6 @@ class CountDown():
 
 
 
-
-
 class ClockSignals(QtCore.QObject):
 
     """
@@ -34,6 +32,7 @@ class ClockSignals(QtCore.QObject):
 
 
 class CuckooSignals(QtCore.QObject):
+    """iteration is a signal emiting by Cuckoo every <period> seconds"""
     iteration = QtCore.pyqtSignal()
 
 
@@ -46,7 +45,7 @@ class Cuckoo(QtWidgets.QWidget):
     Can be used to manage rare periodic actions.
     """
 
-    def __init__(self, clock, period:float):
+    def __init__(self, clock, period:seconds_):
         QtWidgets.QWidget.__init__(self)
         self.period = period
         self.step = clock.delay
@@ -71,13 +70,13 @@ class CuckooClock(QtWidgets.QWidget):
     Be aware that delays will not be very accurate.
     """
 
-    def __init__(self, delay:float=0.5):
+    def __init__(self, delay:seconds_=0.5):
         QtWidgets.QWidget.__init__(self)
         self.signals = ClockSignals()
         self.cuckoos:dict[str, Cuckoo] = {}
         self.delay = delay
 
-    def get_cuckoo(self, period:float) -> Cuckoo:
+    def get_cuckoo(self, period:seconds_) -> Cuckoo:
         """
         Creates Cuckoo object that emits iteration signals in specified frequency.
         Period must be greater than the clock delay (and preferably a multiple of it)
@@ -87,7 +86,7 @@ class CuckooClock(QtWidgets.QWidget):
             self.cuckoos[str(period)] = Cuckoo(self, period)
         return self.cuckoos[str(period)]
     
-    def del_cuckoo(self, cuckoo:Cuckoo|float):
+    def del_cuckoo(self, cuckoo:Cuckoo|seconds_):
         """
         Turns off and deletes a Cuckoo.
         Cuckoo can be specified directly or via it's period
@@ -96,7 +95,7 @@ class CuckooClock(QtWidgets.QWidget):
         match cuckoo:
             case isinstance(cuckoo, Cuckoo):
                 key = str(cuckoo.period)
-            case float:
+            case seconds_:
                 key = str(cuckoo)
                 
         self.cuckoos[key].destroy()
@@ -125,7 +124,7 @@ class CuckooClock(QtWidgets.QWidget):
     def run_forever(self):
         self.run_by_condition(lambda: True)
 
-    def run_fixed_time(self, seconds:float):
+    def run_fixed_time(self, seconds:seconds_):
         finish = time.time() + seconds
         self.run_by_condition(lambda: time.time() <= finish)
 

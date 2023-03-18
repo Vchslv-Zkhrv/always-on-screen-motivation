@@ -18,7 +18,7 @@ FONTSIZE = 12
 place_ = tuple[int, int]
 size_ = int | None
 style_ = Style | str
-
+seconds_ = float
 
 
 @dataclass
