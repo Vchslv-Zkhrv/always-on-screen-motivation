@@ -72,7 +72,7 @@ class AbstractTimeLabel(QtWidgets.QPushButton):
 
     def __init__(self, clock:CuckooClock):
         QtWidgets.QPushButton.__init__(self)
-        self.setFont(MonospaceFont(10))
+        self.setFont(Fonts.lucon(10))
         clock.signals.tick.connect(self.update)
 
     @abstractmethod
@@ -85,7 +85,16 @@ class TimeStampString(QtWidgets.QLabel):
 
     def __init__(self):
         QtWidgets.QLabel.__init__(self)
-        self.setFont(MonospaceFont(9))
+        self.setFont(Fonts.lucon(10))
         self.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.setSizePolicy(SizePolicies.fixed)
         self.setStyleSheet("bacground-color:red")
+
+
+class WindowTitle(QtWidgets.QLabel):
+
+    """label in the top of Window"""
+
+    def __init__(self, text:str):
+        QtWidgets.QLabel.__init__(self)
+        self.setText(text)

@@ -30,6 +30,7 @@ class CurrentTimeLabel(AbstractTimeLabel):
 
 
 
+
 class CurrentTimeWindow(TimeWindow):
 
     """always-on-screen window showing current time"""

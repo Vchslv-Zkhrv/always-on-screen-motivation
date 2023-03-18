@@ -58,7 +58,6 @@ class Cuckoo(QtWidgets.QWidget):
     def on_clock_tick(self):
         self.expired_time += self.step
         if self.expired_time >= self.period:
-            logger.debug("cuckoo iteration")
             self.expired_time = 0
             self.signals.iteration.emit()
 

@@ -1,11 +1,39 @@
 from PyQt6 import QtWidgets, QtCore, QtGui
 
-from config import SizePolicies
+from config import * 
 
 
 """
 Quik base widgets creation
 """
+
+
+
+class SizePolicy(QtWidgets.QSizePolicy):
+    
+    def __init__(self, horizontal:QtWidgets.QSizePolicy.Policy, vertical:QtWidgets.QSizePolicy.Policy):
+        QtWidgets.QSizePolicy.__init__(self, horizontal, vertical)
+        self.setHorizontalStretch(0)
+        self.setVerticalStretch(0)
+
+
+@dataclass
+class SizePolicies():
+    expanding = SizePolicy(
+        QtWidgets.QSizePolicy.Policy.Expanding,
+        QtWidgets.QSizePolicy.Policy.Expanding)
+    fixed = SizePolicy(
+        QtWidgets.QSizePolicy.Policy.Fixed,
+        QtWidgets.QSizePolicy.Policy.Fixed)
+    shrinking = SizePolicy(
+        QtWidgets.QSizePolicy.Policy.Minimum,
+        QtWidgets.QSizePolicy.Policy.Minimum)
+    row = SizePolicy(
+        QtWidgets.QSizePolicy.Policy.Expanding,
+        QtWidgets.QSizePolicy.Policy.Minimum)
+    column = SizePolicy(
+        QtWidgets.QSizePolicy.Policy.Minimum,
+        QtWidgets.QSizePolicy.Policy.Expanding)
 
 
 class HLayout(QtWidgets.QHBoxLayout):
@@ -17,8 +45,6 @@ class HLayout(QtWidgets.QHBoxLayout):
         self.setContentsMargins(padding, padding, padding, padding)
         self.setSpacing(spacing)
 
-
-
 class VLayout(QtWidgets.QVBoxLayout):
     
     """QVBoxLayout with spacing and margins set to 0"""
@@ -27,7 +53,6 @@ class VLayout(QtWidgets.QVBoxLayout):
         QtWidgets.QVBoxLayout.__init__(self, parent)
         self.setContentsMargins(padding, padding, padding, padding)
         self.setSpacing(spacing)
-
 
 
 class GLayout(QtWidgets.QGridLayout):
@@ -40,10 +65,6 @@ class GLayout(QtWidgets.QGridLayout):
         self.setSpacing(spacing)
 
 
-
-
-
-
 class VSpacer(QtWidgets.QSpacerItem):
 
     """vertical spacer item"""
@@ -52,15 +73,12 @@ class VSpacer(QtWidgets.QSpacerItem):
         QtWidgets.QSpacerItem.__init__(self, 0,height, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
 
 
-
 class HSpacer(QtWidgets.QSpacerItem):
 
     """horizontal spacer item"""
 
     def __init__(self, width:int=0):
         QtWidgets.QSpacerItem.__init__(self, width,0, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
-
-
 
 class HSpacerWidget(QtWidgets.QFrame):
 
@@ -89,7 +107,6 @@ class SpacerWidget(QtWidgets.QFrame):
         self.setSizePolicy(SizePolicies.expanding)
 
 
-
 class VFrame(QtWidgets.QFrame):
 
     """
@@ -101,7 +118,6 @@ class VFrame(QtWidgets.QFrame):
         QtWidgets.QFrame.__init__(self)
         self.setSizePolicy(SizePolicies.column)
         self.layout_ = VLayout(self)
-
 
 
 class HFrame(QtWidgets.QFrame):
@@ -131,7 +147,6 @@ class GFrame(QtWidgets.QFrame):
         self.layout_ = GLayout(self)
 
 
-
 class WrapperCenter(GFrame):
 
     """places wrapped widget to the center"""
@@ -156,7 +171,6 @@ class WrapperTop(VFrame):
         self.layout_.addWidget(widget)
         self.layout_.addItem(VSpacer())
 
-
         
 class WrapperBottom(VFrame):
 
@@ -167,7 +181,6 @@ class WrapperBottom(VFrame):
         VFrame.__init__(self)
         self.layout_.addItem(VSpacer())
         self.layout_.addWidget(widget)
-
 
         
 class WrapperLeft(HFrame):
@@ -181,7 +194,6 @@ class WrapperLeft(HFrame):
         self.layout_.addItem(HSpacer())
 
 
-        
 class WrapperRight(HFrame):
 
     """places wrapped widget to the right"""
@@ -192,4 +204,12 @@ class WrapperRight(HFrame):
         self.layout_.addItem(HSpacer())
         self.layout_.addWidget(widget)
 
-        
+
+class MonospaceFont(QtGui.QFont):
+
+    """font used to display timestamp"""
+
+    def __init__(self, size:int):
+        id_ = QtGui.QFontDatabase.addApplicationFont(f"{PATH}\\fonts\\lucon.ttf")
+        families = QtGui.QFontDatabase.applicationFontFamilies(id_)
+        QtGui.QFont.__init__(self, families[0], size)

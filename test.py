@@ -53,6 +53,8 @@ class Main(QtWidgets.QApplication):
             w = window(settings, self.clock)
             self.windows.append(w)
 
+
+
     def start(self):
         logger.info(str(self.windows))
         for w in self.windows:
