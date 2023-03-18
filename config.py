@@ -11,7 +11,7 @@ from loguru import logger
 
 
 PATH = os.getcwd() 
-TODAY_FORMAT = "%m.%d\n%H:%M\n %a"
+TODAY_FORMAT = "%m.%d %a\n%H:%M:%S"
 SCREEN = (screeninfo.get_monitors()[0].width, screeninfo.get_monitors()[0].height)
 
 

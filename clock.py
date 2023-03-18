@@ -15,40 +15,49 @@ class CountDown():
     def __call__(self) -> bool:
         self.finish -= 1
         return self.finish != -1
-        
 
-class CuckooClock():
+
+
+class ClockSignals(QtCore.QObject):
 
     """
-    Emits signals every <delay> seconds.
+    Clock widget signals:
+    tick: on every iteration
+    stop: on thread exit 
+    """
+    tick = QtCore.pyqtSignal()
+    stop = QtCore.pyqtSignal()
+
+
+
+
+class CuckooClock(QtWidgets.QWidget):
+
+    """
+    Emits tick signals every <delay> seconds.
     Be aware that delays will not be very accurate.
     """
 
-    def __init__(self, delay:float, actions:list[callable]):
+    def __init__(self, delay:float=0.5):
+        QtWidgets.QWidget.__init__(self)
+        self.signals = ClockSignals()
         self.delay = delay
-        self.actions = actions
-
-    def add_action(self, action:callable):
-        self.actions.append(action)
-
-    def del_action(self, action:callable):
-        self.actions.remove(action)
-
-    def do(self):
-        for act in self.actions: act()
 
     def loop(self, exit_condition:callable):
-        while exit_condition():
-            logger.info("loop iteration")
-            time.sleep(self.delay)
-            self.do()
-        logger.debug("loop ended") 
-            
-    def run_by_condition(self, condition):
         """
         Calls condition() without arguments at every iteration.
         Runs untill gets True
         """
+        logger.debug("clock started")
+        while exit_condition():
+            time.sleep(self.delay)
+            self.signals.tick.emit()
+        self.signals.stop.emit()
+        logger.debug("clock stopped")
+        sys.exit()
+            
+    def run_by_condition(self, condition):
+        """launches loop"""
         loop = threading.Thread(target=self.loop, args=(condition, ), daemon=False)
         loop.start()
 
@@ -65,9 +74,6 @@ class CuckooClock():
 
     def run_until_time(self, epoch:float):
         self.run_by_condition(lambda: time.time() <= epoch)
-
-
-
 
 
 

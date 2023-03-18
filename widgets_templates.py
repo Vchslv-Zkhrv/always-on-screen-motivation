@@ -67,13 +67,13 @@ class TimeWindow(AlwaysOnSrcreenWindow):
 class AbstractTimeLabel(QtWidgets.QPushButton):
 
     """
-    Label that should be appended to CuckooClock.actions via it's update() method
+    Label reacting on CuckooClock tick signals by it's update method
     """
 
     def __init__(self, clock:CuckooClock):
         QtWidgets.QPushButton.__init__(self)
         self.setFont(MonospaceFont(10))
-        clock.add_action(self.update)
+        clock.signals.tick.connect(self.update)
 
     @abstractmethod
     def update(self): ...

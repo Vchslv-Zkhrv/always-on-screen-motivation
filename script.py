@@ -21,7 +21,7 @@ class Main(QtWidgets.QApplication):
     def __init__(self, settings:ApplicationSettings, *windows:type[TimeWindow]):
 
         QtWidgets.QApplication.__init__(self, sys.argv)
-        self.clock = CuckooClock(0.5, [])
+        self.clock = CuckooClock(0.5)
         self.windows_types = windows
         self.windows:list[TimeWindow] = []
         self.settings = settings
@@ -63,8 +63,7 @@ class Main(QtWidgets.QApplication):
         for w in self.windows:
             w.show()
         logger.debug("windows showed")
-        self.clock.run_fixed_time(600)
-        logger.debug("clock started")
+        self.clock.run_forever()
         self.exec()
 
         
@@ -77,5 +76,9 @@ class Main(QtWidgets.QApplication):
 
 if __name__ == "__main__":
     
-    settings = ApplicationSettings((100, 100), "row", "background-color:white; color:rgb(20,20,20); border-radius:5px")
-    app = Main(settings, CurrentTimeWindow, CurrentTimeWindow, CurrentTimeWindow, )
+    w, h = SCREEN
+
+
+
+    settings = ApplicationSettings((w-900,h-300), "row", "background-color:white; color:rgb(20,20,20); border-radius:5px")
+    app = Main(settings, CurrentTimeWindow)
