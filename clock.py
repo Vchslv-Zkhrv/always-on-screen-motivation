@@ -18,15 +18,49 @@ class CountDown():
 
 
 
+
+
 class ClockSignals(QtCore.QObject):
 
     """
     Clock widget signals:
     tick: on every iteration
+    start: before enter the loop
     stop: on thread exit 
     """
+    start = QtCore.pyqtSignal()
     tick = QtCore.pyqtSignal()
     stop = QtCore.pyqtSignal()
+
+
+class CuckooSignals(QtCore.QObject):
+    iteration = QtCore.pyqtSignal()
+
+
+
+
+class Cuckoo(QtWidgets.QWidget):
+
+    """
+    Emits specific signals with a frequency different from (and lower than) CuckooClock.
+    Can be used to manage rare periodic actions.
+    """
+
+    def __init__(self, clock, period:float):
+        QtWidgets.QWidget.__init__(self)
+        self.period = period
+        self.step = clock.delay
+        self.signals = CuckooSignals()
+        self.clock = clock
+        self.clock.signals.tick.connect(self.on_clock_tick)
+        self.expired_time = 0
+
+    def on_clock_tick(self):
+        self.expired_time += self.step
+        if self.expired_time >= self.period:
+            logger.debug("cuckoo iteration")
+            self.expired_time = 0
+            self.signals.iteration.emit()
 
 
 
@@ -41,13 +75,41 @@ class CuckooClock(QtWidgets.QWidget):
     def __init__(self, delay:float=0.5):
         QtWidgets.QWidget.__init__(self)
         self.signals = ClockSignals()
+        self.cuckoos:dict[str, Cuckoo] = {}
         self.delay = delay
+
+    def get_cuckoo(self, period:float) -> Cuckoo:
+        """
+        Creates Cuckoo object that emits iteration signals in specified frequency.
+        Period must be greater than the clock delay (and preferably a multiple of it)
+        If Cuckoo with same period already exists, returnes it.
+        """
+        if str(period) not in self.cuckoos:
+            self.cuckoos[str(period)] = Cuckoo(self, period)
+        return self.cuckoos[str(period)]
+    
+    def del_cuckoo(self, cuckoo:Cuckoo|float):
+        """
+        Turns off and deletes a Cuckoo.
+        Cuckoo can be specified directly or via it's period
+        """
+        
+        match cuckoo:
+            case isinstance(cuckoo, Cuckoo):
+                key = str(cuckoo.period)
+            case float:
+                key = str(cuckoo)
+                
+        self.cuckoos[key].destroy()
+        self.cuckoos[key] = None
+
 
     def loop(self, exit_condition:callable):
         """
         Calls condition() without arguments at every iteration.
-        Runs untill gets True
+        Runs untill gets True, then exits thread and emits stop signal
         """
+        self.signals.start.emit()
         logger.debug("clock started")
         while exit_condition():
             time.sleep(self.delay)
@@ -74,6 +136,9 @@ class CuckooClock(QtWidgets.QWidget):
 
     def run_until_time(self, epoch:float):
         self.run_by_condition(lambda: time.time() <= epoch)
+
+
+
 
 
 

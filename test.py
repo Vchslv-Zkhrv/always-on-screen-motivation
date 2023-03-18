@@ -1,15 +1,8 @@
 import sys
-from datetime import datetime
-
-from PyQt6 import QtWidgets, QtCore, QtGui
 
 from widgets_templates import *
 from widgets import *
 from config import *
-
-
-
-
 
 
 
@@ -22,6 +15,7 @@ class Main(QtWidgets.QApplication):
 
         QtWidgets.QApplication.__init__(self, sys.argv)
         self.clock = CuckooClock(0.5)
+        self.clock.signals.stop.connect(sys.exit)
         self.windows_types = windows
         self.windows:list[TimeWindow] = []
         self.settings = settings
@@ -30,7 +24,8 @@ class Main(QtWidgets.QApplication):
         logger.debug("windows created")
         self.start()
 
-        
+    def five_seconds(self):
+        logger.debug("5-sec iteration")        
 
     def _get_window_position(self) -> tuple[int, int]:
         """ return position for new window"""
@@ -63,7 +58,9 @@ class Main(QtWidgets.QApplication):
         for w in self.windows:
             w.show()
         logger.debug("windows showed")
-        self.clock.run_forever()
+        c = self.clock.get_cuckoo(5)
+        c.signals.iteration.connect(self.five_seconds)
+        self.clock.run_fixed_time(20)
         self.exec()
 
         
