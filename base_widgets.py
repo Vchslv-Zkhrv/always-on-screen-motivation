@@ -204,12 +204,3 @@ class WrapperRight(HFrame):
         self.layout_.addItem(HSpacer())
         self.layout_.addWidget(widget)
 
-
-class MonospaceFont(QtGui.QFont):
-
-    """font used to display timestamp"""
-
-    def __init__(self, size:int):
-        id_ = QtGui.QFontDatabase.addApplicationFont(f"{PATH}\\fonts\\lucon.ttf")
-        families = QtGui.QFontDatabase.applicationFontFamilies(id_)
-        QtGui.QFont.__init__(self, families[0], size)

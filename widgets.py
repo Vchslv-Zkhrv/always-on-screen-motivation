@@ -1,4 +1,5 @@
 from datetime import datetime
+import webbrowser
 
 from PyQt6 import QtWidgets, QtCore, QtGui
 
@@ -20,14 +21,11 @@ class CurrentTimeLabel(AbstractTimeLabel):
         self.layout_.addWidget(self.time)
         self.setSizePolicy(SizePolicies.expanding)
         self.layout_.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
-        print(self.date.styleSheet())
 
     def update(self):
         date, time = datetime.now().strftime(TODAY_FORMAT).split("\n")
         self.date.setText(date[:-1])
         self.time.setText(time)
-
-
 
 
 
@@ -41,8 +39,28 @@ class CurrentTimeWindow(TimeWindow):
         TimeWindow.__init__(self, settings, clock)
         self.setFixedSize(75,40)
         self.layout_.addWidget(self.label,0,0,1,1)
-        print(self.pos().x(), self.pos().y())
 
     def setStyleSheet(self, styleSheet: str) -> None:
         self.label.setStyleSheet(styleSheet)
         return super().setStyleSheet(styleSheet)
+    
+
+class CheckSocialsNotification(RepetitiveFullscreenNotification):
+
+    """
+    Shows notification that offers user to check his socials.
+    Opens choosen socials links in browser when closing.
+    Shows every time when Cuckoo emits iteration signal
+    """
+
+    def __init__(self,
+                 settings:NotificationSettings,
+                 clock:CuckooClock,
+                 links:tuple[str]):
+        self.links = links
+        RepetitiveFullscreenNotification.__init__(self, settings, clock)
+        self.button.clicked.connect(lambda e: self.open_links())
+
+    def open_links(self): 
+        for link in self.links:
+            webbrowser.get(BROWSER_PATH + " %s").open(link)

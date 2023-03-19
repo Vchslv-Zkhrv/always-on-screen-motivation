@@ -2,7 +2,7 @@ from PyQt6 import QtWidgets, QtGui, QtCore
 from abc import abstractmethod
 
 from config import *
-from clock import CuckooClock
+from clock import *
 from base_widgets import *
 
 
@@ -72,7 +72,7 @@ class AbstractTimeLabel(QtWidgets.QPushButton):
 
     def __init__(self, clock:CuckooClock):
         QtWidgets.QPushButton.__init__(self)
-        self.setFont(Fonts.lucon(10))
+        self.setFont(Fonts.lucon(FONTSIZE))
         clock.signals.tick.connect(self.update)
 
     @abstractmethod
@@ -85,10 +85,9 @@ class TimeStampString(QtWidgets.QLabel):
 
     def __init__(self):
         QtWidgets.QLabel.__init__(self)
-        self.setFont(Fonts.lucon(10))
+        self.setFont(Fonts.lucon(FONTSIZE))
         self.setAlignment(QtCore.Qt.AlignmentFlag.AlignCenter)
         self.setSizePolicy(SizePolicies.fixed)
-        self.setStyleSheet("bacground-color:red")
 
 
 class WindowTitle(QtWidgets.QLabel):
@@ -98,3 +97,46 @@ class WindowTitle(QtWidgets.QLabel):
     def __init__(self, text:str):
         QtWidgets.QLabel.__init__(self)
         self.setText(text)
+
+
+
+class FullscreenTranslucent(AlwaysOnSrcreenWindow):
+
+    """
+    Translucent fullscreen window showed above all other windows.
+    Can be closed by mouse click
+    """
+
+    def __init__(
+            self,
+            settings:NotificationSettings):
+        s = WindowSettings((0,0), SCREEN,  f"background-color:{settings.back_color}")
+        AlwaysOnSrcreenWindow.__init__(self, s)
+        opacity = QtWidgets.QGraphicsOpacityEffect()
+        opacity.setOpacity(settings.opacity)
+        self.setGraphicsEffect(opacity)
+        self.cw.setGraphicsEffect(opacity)
+        self.button = QtWidgets.QPushButton()
+        self.button.setFont(Fonts.raleway(24))
+        self.button.setSizePolicy(SizePolicies.expanding)
+        self.button.setStyleSheet(f"color: {settings.fore_color}")
+        self.button.setText(settings.text)
+        self.layout_.addWidget(self.button)
+        self.button.clicked.connect(lambda e: self.hide())
+        self.show = self.showFullScreen
+
+
+
+class RepetitiveFullscreenNotification(FullscreenTranslucent):
+
+    """
+    Fullscreen (very annoying, but effective) notification to do smth.
+    Shows itself at the Cuckoo iteration signal, hides by mouse click
+    """
+
+    def __init__(self,
+                 settings:NotificationSettings,
+                 clock:CuckooClock):
+        FullscreenTranslucent.__init__(self, settings)
+        self.cuckoo = clock.get_cuckoo(settings.period)
+        self.cuckoo.signals.iteration.connect(self.show)
