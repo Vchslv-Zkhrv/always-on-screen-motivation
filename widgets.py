@@ -45,11 +45,10 @@ class CurrentTimeWindow(TimeWindow):
         return super().setStyleSheet(styleSheet)
     
 
-class CheckSocialsNotification(RepetitiveFullscreenNotification):
+class LinksNotification(RepetitiveNotification):
 
     """
-    Shows notification that offers user to check his socials.
-    Opens choosen socials links in browser when closing.
+    Opens choosen links in browser when closing.
     Shows every time when Cuckoo emits iteration signal
     """
 
@@ -58,7 +57,7 @@ class CheckSocialsNotification(RepetitiveFullscreenNotification):
                  clock:CuckooClock,
                  links:tuple[str]):
         self.links = links
-        RepetitiveFullscreenNotification.__init__(self, settings, clock)
+        RepetitiveNotification.__init__(self, settings, clock)
         self.button.clicked.connect(lambda e: self.open_links())
 
     def open_links(self): 

@@ -17,7 +17,7 @@ class Main(QtWidgets.QApplication):
         self.clock = CuckooClock(0.5)
         self.clock.signals.stop.connect(sys.exit)
         self.windows:list[Window] = []
-        self.notifications:list[RepetitiveFullscreenNotification] = []
+        self.notifications:list[RepetitiveNotification] = []
         self.settings = settings
 
 
@@ -50,7 +50,7 @@ class Main(QtWidgets.QApplication):
 
 
     def add_notification(self,
-                        note:type[RepetitiveFullscreenNotification],
+                        note:type[RepetitiveNotification],
                         settings:NotificationSettings,
                         *args, 
                         **kwargs):

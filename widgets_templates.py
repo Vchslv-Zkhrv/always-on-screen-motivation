@@ -127,7 +127,7 @@ class FullscreenTranslucent(AlwaysOnSrcreenWindow):
 
 
 
-class RepetitiveFullscreenNotification(FullscreenTranslucent):
+class RepetitiveNotification(FullscreenTranslucent):
 
     """
     Fullscreen (very annoying, but effective) notification to do smth.
