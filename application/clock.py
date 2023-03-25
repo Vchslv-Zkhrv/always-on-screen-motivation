@@ -6,7 +6,7 @@ from datetime import datetime
 from PyQt6 import QtWidgets, QtCore
 from loguru import logger
 
-import config
+from . import config
 
 
 class CountDown():

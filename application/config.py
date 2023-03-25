@@ -4,7 +4,7 @@ from typing import Literal
 
 import screeninfo
 
-import styles
+from . import styles
 
 
 PATH = os.getcwd()

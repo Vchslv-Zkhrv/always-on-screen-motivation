@@ -4,10 +4,10 @@ import webbrowser
 from PyQt6 import QtCore
 from loguru import logger
 
-import widgets_templates as wt
-import base_widgets as bw
-import config
-import clock
+from . import widgets_templates as wt
+from . import base_widgets as bw
+from . import config
+from . import clock
 
 
 class CurrentTimeLabel(wt.AbstractTimeLabel):

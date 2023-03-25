@@ -3,10 +3,10 @@ from abc import abstractmethod
 from PyQt6 import QtWidgets, QtCore
 from loguru import logger
 
-import config
-import clock
-import styles
-import base_widgets as bw
+from . import config
+from . import clock
+from . import styles
+from . import base_widgets as bw
 
 
 """PyQt6 widgets with extended functionality"""
