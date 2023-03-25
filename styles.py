@@ -28,7 +28,7 @@ class Style():
         return f"""
         color: {self.fore};
         background:{self.background};
-        border: {self.border}; 
+        border: {self.border};
         border-radius: {self.radius}px; """
 
 
