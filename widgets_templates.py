@@ -50,7 +50,8 @@ class AlwaysOnSrcreenWindow(Window):
 
         self.setWindowFlags(
             QtCore.Qt.WindowType.FramelessWindowHint |
-            QtCore.Qt.WindowType.WindowStaysOnTopHint)
+            QtCore.Qt.WindowType.WindowStaysOnTopHint |
+            QtCore.Qt.WindowType.Tool)
 
         self.setAttribute(QtCore.Qt.WidgetAttribute.WA_TranslucentBackground)
         self.setCentralWidget(self.cw)
