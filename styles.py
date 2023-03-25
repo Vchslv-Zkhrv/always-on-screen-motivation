@@ -84,9 +84,7 @@ class Personalization():
         }
         return colors
 
-    def _generate_fores(self,
-                        fcolor: Color,
-                        bcolor: Color) -> tuple[Color, Color, Color, Color]:
+    def _generate_fores(self, fcolor: Color, bcolor: Color) -> tuple[Color, Color, Color, Color]:
         c1, c2, c3, c4 = fcolor, fcolor, bcolor, bcolor
         return c1, c2, c3, c4
 
