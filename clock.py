@@ -1,15 +1,19 @@
+import sys
 import threading
 import time
 from datetime import datetime
-from config import *
 
+from PyQt6 import QtWidgets, QtCore
+from loguru import logger
+
+import config
 
 
 class CountDown():
-
-    """call like a function to find out if the countdown has expired or not"""
-
-    def __init__(self, finish:int):
+    """
+    call like a function to find out if the countdown has expired or not
+    """
+    def __init__(self, finish: int):
         self.finish = finish
 
     def __call__(self) -> bool:
@@ -17,14 +21,12 @@ class CountDown():
         return self.finish != -1
 
 
-
 class ClockSignals(QtCore.QObject):
-
     """
     Clock widget signals:
     tick: on every iteration
     start: before enter the loop
-    stop: on thread exit 
+    stop: on thread exit
     """
     start = QtCore.pyqtSignal()
     tick = QtCore.pyqtSignal()
@@ -32,20 +34,20 @@ class ClockSignals(QtCore.QObject):
 
 
 class CuckooSignals(QtCore.QObject):
-    """iteration is a signal emiting by Cuckoo every <period> seconds"""
+    """
+    iteration is a signal emiting by Cuckoo every <period> seconds
+    """
     iteration = QtCore.pyqtSignal()
 
 
-
-
 class Cuckoo(QtWidgets.QWidget):
-
     """
-    Emits specific signals with a frequency different from (and lower than) CuckooClock.
+    Emits specific signals with a frequency
+    different from (and lower than) CuckooClock.
+
     Can be used to manage rare periodic actions.
     """
-
-    def __init__(self, clock, period:seconds_):
+    def __init__(self, clock, period: config.seconds_):
         QtWidgets.QWidget.__init__(self)
         self.period = period
         self.step = clock.delay
@@ -61,48 +63,46 @@ class Cuckoo(QtWidgets.QWidget):
             self.signals.iteration.emit()
 
 
-
-
 class CuckooClock(QtWidgets.QWidget):
-
     """
     Emits tick signals every <delay> seconds.
     Be aware that delays will not be very accurate.
     """
-
-    def __init__(self, delay:seconds_=0.5):
+    def __init__(self, delay: config.seconds_ = 0.5):
         QtWidgets.QWidget.__init__(self)
         self.signals = ClockSignals()
-        self.cuckoos:dict[str, Cuckoo] = {}
+        self.cuckoos: dict[str, Cuckoo] = {}
         self.delay = delay
 
-    def get_cuckoo(self, period:seconds_) -> Cuckoo:
+    def get_cuckoo(self, period: config.seconds_) -> Cuckoo:
         """
-        Creates Cuckoo object that emits iteration signals in specified frequency.
-        Period must be greater than the clock delay (and preferably a multiple of it)
+        Creates Cuckoo object that emits
+        iteration signals in specified frequency.
+
+        Period must be greater than the clock delay
+        (and preferably a multiple of it)
+
         If Cuckoo with same period already exists, returnes it.
         """
         if str(period) not in self.cuckoos:
             self.cuckoos[str(period)] = Cuckoo(self, period)
         return self.cuckoos[str(period)]
-    
-    def del_cuckoo(self, cuckoo:Cuckoo|seconds_):
+
+    def del_cuckoo(self, cuckoo: Cuckoo | config.seconds_):
         """
         Turns off and deletes a Cuckoo.
         Cuckoo can be specified directly or via it's period
         """
-        
-        match cuckoo:
-            case isinstance(cuckoo, Cuckoo):
-                key = str(cuckoo.period)
-            case seconds_:
-                key = str(cuckoo)
-                
+
+        if cuckoo.__class__ == Cuckoo:
+            key = str(cuckoo.period)
+        elif cuckoo.__class__ == config.seconds_:
+            key = str(cuckoo)
+
         self.cuckoos[key].destroy()
         self.cuckoos[key] = None
 
-
-    def loop(self, exit_condition:callable):
+    def loop(self, exit_condition: callable):
         """
         Calls condition() without arguments at every iteration.
         Runs untill gets True, then exits thread and emits stop signal
@@ -115,37 +115,34 @@ class CuckooClock(QtWidgets.QWidget):
         self.signals.stop.emit()
         logger.debug("clock stopped")
         sys.exit()
-            
+
     def run_by_condition(self, condition):
         """launches loop"""
-        loop = threading.Thread(target=self.loop, args=(condition, ), daemon=False)
+        loop = threading.Thread(
+            target=self.loop,
+            args=(condition, ),
+            daemon=False)
         loop.start()
 
     def run_forever(self):
         self.run_by_condition(lambda: True)
 
-    def run_fixed_time(self, seconds:seconds_):
+    def run_fixed_time(self, seconds: config.seconds_):
         finish = time.time() + seconds
         self.run_by_condition(lambda: time.time() <= finish)
 
-    def run_fixed_times(self, count:int):
+    def run_fixed_times(self, count: int):
         counter = CountDown(count)
         self.run_by_condition(counter)
 
-    def run_until_time(self, epoch:float):
+    def run_until_time(self, epoch: float):
         self.run_by_condition(lambda: time.time() <= epoch)
-
-
-
-
-
 
 
 if __name__ == "__main__":
 
-
     def show_date():
-        print(datetime.now().strftime(TODAY_FORMAT))
+        print(datetime.now().strftime(config.TODAY_FORMAT))
 
     def show_time():
         print(datetime.now().strftime("%S.%f"), end="\n\n")
