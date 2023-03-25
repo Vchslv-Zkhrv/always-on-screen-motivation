@@ -20,7 +20,8 @@ class Window(QtWidgets.QMainWindow):
         QtWidgets.QMainWindow.__init__(self)
 
         logger.debug("Created window")
-        self.setStyleSheet(settings.style)
+        style = settings.styles
+        self.setStyleSheet(str(style))
 
         if settings.place:
             self.move(*settings.place)

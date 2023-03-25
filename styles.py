@@ -7,6 +7,7 @@ from PyQt6 import QtGui
 """gui settings module"""
 
 
+@dataclass
 class Color():
     r: int
     g: int
@@ -46,7 +47,7 @@ class Personalization():
     """
 
     def __init__(self):
-        self.themes = {}
+        self.themes: dict[str, Theme] = {}
 
         self.regist_theme(
             "default light",

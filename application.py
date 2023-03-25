@@ -36,7 +36,7 @@ class Main(QtWidgets.QApplication):
             dy = 0
         return x+dx, y+dy
 
-    def add_window(self, window: type[widgets.TimeWindow]):
+    def add_window(self, window: type[wt.TimeWindow]):
         """
         makes & sets personal WindowSettings to each window
         based ApplicationSettings. Connects windows to main CuckooClock

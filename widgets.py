@@ -17,7 +17,7 @@ class CurrentTimeLabel(wt.AbstractTimeLabel):
     def __init__(self, clock: clock.CuckooClock):
         wt.AbstractTimeLabel.__init__(self, clock)
 
-        self.layout_ = wt.VLayout(self, 2)
+        self.layout_ = bw.VLayout(self, 2)
         self.date = wt.TimeStampString()
         self.time = wt.TimeStampString()
         self.layout_.addWidget(self.date)
