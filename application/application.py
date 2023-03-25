@@ -3,10 +3,10 @@ import sys
 from PyQt6 import QtWidgets
 from loguru import logger
 
-import widgets_templates as wt
-import widgets
-import config
-import clock
+from . import widgets_templates as wt
+from . import widgets
+from . import config
+from . import clock
 
 
 class Main(QtWidgets.QApplication):
