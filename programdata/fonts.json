@@ -1,0 +1,23 @@
+{
+    "amita": { "langs": ["en"], "kind": "handwriting" },
+    "bebasneue": { "langs": ["en"], "kind": "display" },
+    "berkshireswash": { "langs": ["en"], "kind": "handwriting" },
+    "cormorant": { "langs": ["en", "ru"], "kind": "serif" },
+    "ebgaramont": { "langs": ["en", "ru"], "kind": "handwriting" },
+    "josefinslab": { "langs": ["en"], "kind": "serif" },
+    "lobstertwo": { "langs": ["en"], "kind": "handwriting" },
+    "lora": { "langs": ["en", "ru"], "kind": "serif" },
+    "marckscript": { "langs": ["en", "ru"], "kind": "handwriting" },
+    "montserrat": { "langs": ["en", "ru"], "kind": "display" },
+    "montserratalternates": { "langs": ["en", "ru"], "kind": "display" },
+    "notoserif": { "langs": ["en", "ru"], "kind": "handwriting" },
+    "opensans": { "langs": ["en", "ru"], "kind": "display" },
+    "ptserif": { "langs": ["en", "ru"], "kind": "handwriting" },
+    "raleway": { "langs": ["en", "ru"], "kind": "display" },
+    "roboto": { "langs": ["en", "ru"], "kind": "display" },
+    "robotoslab": { "langs": ["en", "ru"], "kind": "serif" },
+    "sacramento": { "langs": ["en"], "kind": "handwriting" },
+    "sourceserifpro": { "langs": ["en", "ru"], "kind": "serif" },
+    "ubuntu": { "langs": ["en", "ru"], "kind": "display" },
+    "ubuntumono": { "langs": ["en", "ru"], "kind": "monospace" }
+}
